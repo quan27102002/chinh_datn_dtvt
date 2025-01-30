@@ -118,21 +118,21 @@ class MyApp extends StatelessWidget {
                       ),
                       debugShowCheckedModeBanner: false,
                       // Sử dụng StreamBuilder để theo dõi trạng thái đăng nhập
-                      home: StreamBuilder<User?>(
-                        stream: FirebaseAuth.instance.authStateChanges(),
-                        builder: (ctx, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const SplashScreen();
-                          }
-                          if (snapshot.hasData) {
-                            return const Dashboard();
-                          } else {
-                            return const LoginPage();
-                          }
-                        },
-                      ),
-                      // home: const Dashboard(),
+                      // home: StreamBuilder<User?>(
+                      //   stream: FirebaseAuth.instance.authStateChanges(),
+                      //   builder: (ctx, snapshot) {
+                      //     if (snapshot.connectionState ==
+                      //         ConnectionState.waiting) {
+                      //       return const SplashScreen();
+                      //     }
+                      //     if (snapshot.hasData) {
+                      //       return const Dashboard();
+                      //     } else {
+                      //       return const LoginPage();
+                      //     }
+                      //   },
+                      // ),
+                      home: const Dashboard(),
                       routes: AppRouters.routes,
                     ),
                     loading.isLoading

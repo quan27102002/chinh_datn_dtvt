@@ -23,25 +23,27 @@ class _LoginPageState extends State<LoginPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<void> _login() async {
+    if (!mounted) return; // Kiểm tra widget còn tồn tại không
     AppFunction.showLoading(context);
+
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
-      // ignore: use_build_context_synchronously
+
+      if (!mounted) return;
       context.read<UserProvider>().saveEmailUser(_emailController.text.trim());
-      // ignore: use_build_context_synchronously
+
+      if (!mounted) return;
       AppFunction.hideLoading(context);
 
-      Navigator.pushNamed(
-        // ignore: use_build_context_synchronously
-        context,
-        AppRouters.dashBoard,
-      );
+      if (!mounted) return;
+      Navigator.pushNamed(context, AppRouters.dashBoard);
     } on FirebaseAuthException catch (e) {
-      // ignore: use_build_context_synchronously
+      if (!mounted) return;
       AppFunction.hideLoading(context);
+
       String errorMessage;
       if (e.code == 'user-not-found') {
         errorMessage = 'Không tìm thấy tài khoản người dùng';
@@ -50,7 +52,8 @@ class _LoginPageState extends State<LoginPage> {
       } else {
         errorMessage = 'Lỗi không xác định';
       }
-      // ignore: use_build_context_synchronously
+
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(errorMessage)),
       );

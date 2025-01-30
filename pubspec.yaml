@@ -45,6 +45,7 @@ dependencies:
   firebase_auth: ^5.1.2
   firebase_database: ^11.0.3
   soundpool: ^2.4.1
+  alan_voice: 3.0.0
   # cloud_firestore: ^5.1.0
 
 dev_dependencies:

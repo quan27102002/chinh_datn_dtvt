@@ -10,6 +10,7 @@ import 'package:datn_trung/themes/app_colors.dart';
 import 'package:datn_trung/util/app_function.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:alan_voice/alan_voice.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -27,6 +28,17 @@ class _HomeScreenState extends State<HomeScreen> {
   double moniPm01Data = 0;
   double moniPm10Data = 0;
   double moniPm25Data = 0;
+  late final DatabaseReference _databaseReference;
+  void _setDeviceState(String path, bool state) async {
+    _databaseReference = FirebaseDatabase.instance.ref('/control').child(path);
+
+    try {
+      await _databaseReference.set(state);
+      print("Giá trị đã cập nhật: $state");
+    } catch (e) {
+      print("Lỗi khi cập nhật Firebase: $e");
+    }
+  }
 
   Future<void> _initData() async {
     DatabaseReference tempFirebase =
@@ -100,6 +112,40 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     _initializeData();
+    AlanVoice.addButton(
+        "6a67a96d28b537ebbc8f183f2fa235f62e956eca572e1d8b807a3e2338fdd0dc/stage",
+        server: "v1.alan.app");
+
+    /// Handle commands from Alan AI Studio
+    AlanVoice.onCommand.add((command) {
+      print("got new command ${command.toString()}");
+      switch (command.data["command"]) {
+        case "lightoneon":
+          _setDeviceState("device1", true);
+          break;
+        case "lightoneoff":
+          _setDeviceState("device1", false);
+          break;
+        case "lighttwoon":
+          _setDeviceState("device2", true);
+          break;
+        case "lighttwooff":
+          _setDeviceState("device2", false);
+          break;
+        case "lightthreeon":
+          _setDeviceState("device3", true);
+          break;
+        case "lightthreeoff":
+          _setDeviceState("device3", false);
+          break;
+        case "lightforon":
+          _setDeviceState("device4", true);
+          break;
+        case "lightforoff":
+          _setDeviceState("device4", false);
+          break;
+      }
+    });
     AppFunction.hideLoading(context);
     super.initState();
   }
